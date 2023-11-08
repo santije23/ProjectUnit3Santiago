@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +43,7 @@ public class StatisticalServiceImpl implements StatisticalService{
                 promEdad = promEdad.add(new BigDecimal(Atribute.age()));
             }
         }
-        promEdad = promEdad.divide(BigDecimal.valueOf(countNumberOfPeople()));
+        promEdad = promEdad.divide(BigDecimal.valueOf(countNumberOfPeople()), 2, RoundingMode.HALF_UP);
         logger.info("Se realizo una consulta en la BD, atributo edad");
         return promEdad;
     }
@@ -57,7 +58,7 @@ public class StatisticalServiceImpl implements StatisticalService{
                 promEstrato = promEstrato.add(new BigDecimal(Atribute.stratum()));
             }
         }
-        promEstrato = promEstrato.divide(BigDecimal.valueOf(countNumberOfPeople()));
+        promEstrato = promEstrato.divide(BigDecimal.valueOf(countNumberOfPeople()), 2, RoundingMode.HALF_UP);
         logger.info("Se realizo una consulta en la BD, atributo estrato");
         return promEstrato;
     }
@@ -72,7 +73,7 @@ public class StatisticalServiceImpl implements StatisticalService{
                 promNumeroDeHijos = promNumeroDeHijos.add(new BigDecimal(Atribute.numberOfChildren()));
             }
         }
-        promNumeroDeHijos = promNumeroDeHijos.divide(BigDecimal.valueOf(countNumberOfPeople()));
+        promNumeroDeHijos = promNumeroDeHijos.divide(BigDecimal.valueOf(countNumberOfPeople()), 2, RoundingMode.HALF_UP);
         logger.info("Se realizo una consulta en la BD, atributo numero de hijos");
         return promNumeroDeHijos;
     }
@@ -87,7 +88,7 @@ public class StatisticalServiceImpl implements StatisticalService{
                 promSalario = promSalario.add(new BigDecimal(Atribute.salary()));
             }
         }
-        promSalario = promSalario.divide(BigDecimal.valueOf(countNumberOfPeople()));
+        promSalario = promSalario.divide(BigDecimal.valueOf(countNumberOfPeople()), 2, RoundingMode.HALF_UP);
         logger.info("Se realizo una consulta en la BD, atributo salario");
         return promSalario;
     }
@@ -99,7 +100,7 @@ public class StatisticalServiceImpl implements StatisticalService{
         for(PersonAttributes Atribute : personAttributesRepository.findAllPersons()) {
             promEstrato = promEstrato.add(new BigDecimal(Atribute.salary()));
         }
-        promEstrato = promEstrato.divide(BigDecimal.valueOf(countNumberOfPeople()));
+        promEstrato = promEstrato.divide(BigDecimal.valueOf(countNumberOfPeople()), 2, RoundingMode.HALF_UP);
         logger.info("Se realizo una consulta en la BD, atributo salario");
         return promEstrato;
     }

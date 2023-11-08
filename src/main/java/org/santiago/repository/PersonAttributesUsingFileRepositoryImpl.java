@@ -4,6 +4,8 @@ import org.santiago.model.PersonAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,13 +15,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Stream;
 
 public class PersonAttributesUsingFileRepositoryImpl implements PersonAttributesRepository{
     private static final Logger logger = LoggerFactory.getLogger( PersonAttributesUsingFileRepositoryImpl.class);
     private List<PersonAttributes> listOfPeople;
     public PersonAttributesUsingFileRepositoryImpl() {
-        this.listOfPeople = new ArrayList<>(loadPeople());//Al momento de construir el Repository se cargan los datos desde el archivo
+        this.listOfPeople = new ArrayList<>(loadPeople());
     }
 
     private List<PersonAttributes> loadPeople(){
@@ -30,10 +33,6 @@ public class PersonAttributesUsingFileRepositoryImpl implements PersonAttributes
     }
 
     private List<String> readFileWithPeople(){
-        //Este método lee el archivo y adiciona cada linea en una posicion de una Lista
-
-        //Para el ejercicio se utiliza la ruta donde se encentra el archivo en el codigo fuente.
-        //Este ruta es diferente al momento de empaquetar el proyecto
 
         Path path = Paths.get( "./src/main/resources/BD.txt");
         try (Stream<String> stream = Files.lines( path)) {
@@ -41,14 +40,12 @@ public class PersonAttributesUsingFileRepositoryImpl implements PersonAttributes
         } catch (IOException x) {
             logger.error("IOException: {0}", x);
         }
-        return Collections.emptyList();//Devuelve una lista vacía
+        return Collections.emptyList();
     }
 
     private PersonAttributes buildPeople(String plainTextGrade){
-    /*Este metodo toma una linea del archivo para generar un vector
-   y con dicho vector generar una Nota
-     */
-        String[] questionArray = plainTextGrade.split(",");//En el archivo las notas vienen separadas por comas por ejemplo: UNIDAD 1,4.5D,2023-08-01
+
+        String[] questionArray = plainTextGrade.split(",");
 
         PersonAttributes personAttributes = new PersonAttributes( questionArray[0], questionArray[1],
                 Integer.parseInt(questionArray[2]), questionArray[3].charAt(0),
@@ -59,8 +56,61 @@ public class PersonAttributesUsingFileRepositoryImpl implements PersonAttributes
         return personAttributes;
     }
 
+
     @Override
     public List<PersonAttributes> findAllPersons() {
         return listOfPeople;
+    }
+
+
+    @Override
+    public String requestData() {
+        Scanner sc = new Scanner(System.in);
+        String newPersonInfo="";
+        String name;
+        String lastName;
+        int age;
+        char gender;
+        boolean employmentStatus;
+        int stratum;
+        int numberOfChildren;
+        String educationalLevel;
+        int salary;
+        System.out.println("Ingrese Nombre:");
+        name = sc.next();
+        System.out.println("Ingrese Apellido:");
+        lastName = sc.next();
+        System.out.println("Ingrese Edad:");
+        age = sc.nextInt();
+        System.out.println("Ingrese género, M para masculino y F para femenino:");
+        gender = sc.next().charAt(0);
+        System.out.println("Ingrese estado laboral true para laborando ó false para desempleado:");
+        employmentStatus = sc.nextBoolean();
+        System.out.println("Ingrese el número de estrato:");
+        stratum = sc.nextInt();
+        System.out.println("Ingrese número de hijos:");
+        numberOfChildren = sc.nextInt();
+        System.out.println("Ingrese nivel educacional entre: Tecnico, Primaria, Secundaria ó Profesional");
+        educationalLevel = sc.next();
+        System.out.println("Ingrese Salario actual:");
+        salary = sc.nextInt();
+        newPersonInfo = name + "," + lastName + "," + age + "," + gender + ","
+                + employmentStatus + "," + stratum + "," + numberOfChildren + ","
+                + educationalLevel + "," + salary;
+        return newPersonInfo;
+    }
+
+    @Override
+    public void setInformationToFile(String newPersonInfo) {
+        try{
+            FileWriter escritura = new FileWriter("./src/main/resources/BD.txt",true);
+            escritura.write("\n"+newPersonInfo);
+            escritura.close();
+            logger.info( "Se agregaron nuevos datos al archivo" );
+
+        }catch (IOException exception) {
+            exception.printStackTrace(System.out);
+            logger.info( "No se pudo agregar los datos al archivo" );
+        }
     }
 }

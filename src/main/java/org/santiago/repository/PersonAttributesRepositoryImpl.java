@@ -2,8 +2,12 @@ package org.santiago.repository;
 
 import org.santiago.model.PersonAttributes;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 // Implementacion de la interfas que se realizo para poder almacenar atributos diligenciados de las personas
 public class PersonAttributesRepositoryImpl implements PersonAttributesRepository{
     @Override
@@ -31,5 +35,53 @@ public class PersonAttributesRepositoryImpl implements PersonAttributesRepositor
         listOfPeople.add(new PersonAttributes("Carlos", "Lopez", 32, 'M', true, 2, 5, "Tecnico", 1300000D));
         listOfPeople.add(new PersonAttributes("Santiago", "Gonzalez", 29, 'M', true, 3, 0, "Profesional", 2300000.54));
         return listOfPeople;
+    }
+
+    @Override
+    public String requestData() {
+        Scanner sc = new Scanner(System.in);
+        String newPersonInfo="";
+        String name;
+        String lastName;
+        int age;
+        char gender;
+        boolean employmentStatus;
+        int stratum;
+        int numberOfChildren;
+        String educationalLevel;
+        double salary;
+        System.out.println("Ingrese Nombre:");
+        name = sc.next();
+        System.out.println("Ingrese Apellido:");
+        lastName = sc.next();
+        System.out.println("Ingrese Edad:");
+        age = sc.nextInt();
+        System.out.println("Ingrese genero:");
+        gender = sc.next().charAt(0);
+        System.out.println("Ingrese Estado laboral true para laborando ó false para desempleado:");
+        employmentStatus = sc.nextBoolean();
+        System.out.println("Ingrese estrato:");
+        stratum = sc.nextInt();
+        System.out.println("Ingrese numero de hijos:");
+        numberOfChildren = sc.nextInt();
+        System.out.println("Ingrese nivel educacional entre: Tecnico, Primaria, Secundaria ó Profesional");
+        educationalLevel = sc.next();
+        System.out.println("Ingrese Salario actual:");
+        salary = sc.nextDouble();
+        newPersonInfo = name + "," + lastName + "," + age + "," + gender + ","
+                + employmentStatus + "," + stratum + "," + numberOfChildren + ","
+                + educationalLevel + "," + salary;
+        return newPersonInfo;
+    }
+
+    @Override
+    public void setInformationToFile(String newPersonInfo) {
+        try{
+            FileWriter escritura = new FileWriter("./src/main/resources/BD.txt",true);
+            escritura.write("\n"+newPersonInfo);
+
+        }catch (IOException exception) {
+            exception.printStackTrace(System.out);
+        }
     }
 }
